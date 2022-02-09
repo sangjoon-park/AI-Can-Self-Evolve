@@ -1,4 +1,4 @@
-## : Code implementation for "AI can evolve without labels"
+## : Code for "AI can evolve without labels"
 ### DISTL: Distillation for self-supervised and self-train learning
 
 <div align="center">
@@ -83,22 +83,22 @@ Then, locate all training data to a folder and test data to another folder, and 
 After successful preprocessing, your data will be located as below.
 
 ```
-├── save_dir
-      ├── labeled (containing about 10% of training data)
-          ├── xxx.png
-          └── ...
-      ├── fold_0 (unlabeled fold containing about 30% of training data)
-          ├── xxx.png
-          └── ...
-      ├── fold_1 (unlabeled fold containing about 30% of training data)
-          ├── xxx.png
-          └── ...
-      ├── fold_2 (unlabeled fold containing about 30% of training data)
-          ├── xxx.png
-          └── ...
-      ├── test (containing validation data)
-          ├── xxx.png
-          └── ...
+--- save_dir
+     --- labeled (containing about 10% of training data)
+            --- xxx.png
+            --- ...
+     --- fold_0 (unlabeled fold containing about 30% of training data)
+            --- xxx.png
+            --- ...
+     --- fold_1 (unlabeled fold containing about 30% of training data)
+            --- xxx.png
+            --- ...
+     --- fold_2 (unlabeled fold containing about 30% of training data)
+            --- xxx.png
+            --- ...
+     --- test (containing validation data)
+            --- xxx.png
+            --- ...
 ```
 
 ## Training a model
