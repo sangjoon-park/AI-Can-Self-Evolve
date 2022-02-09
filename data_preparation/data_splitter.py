@@ -4,13 +4,18 @@ import glob
 import cv2
 from tqdm import tqdm
 import random
+import argparse
 
-# YOUR PATH TO IMAGE FOLDER (containing .png files)
-train_folder = '/COVID_8TB/sangjoon/CXR_data/open_sourced/'
-test_folder = '/COVID_8TB/sangjoon/CXR_data/open_sourced_test/'
+def get_args_parser():
+    parser = argparse.ArgumentParser('data_splitter', add_help=False)
+    parser.add_argument("--train_folder", default='PATH/TO/TRAIN/DATA', type=str, help='Folder containing all train data')
+    parser.add_argument("--test_folder", default='PATH/TO/TEST/DATA', type=str, help='Folder containing all test data')
+    parser.add_argument("--save_dir", default='PATH/TO/SAVE/FILES', type=str, help='Path to your dcm files')
 
-# DIR TO SAVE DIVIDED TRAIN / VALIDATION DATASET
-save_dir = '/COVID_8TB/sangjoon/open_3folds/'
+    return parser
+
+parser = argparse.ArgumentParser('data_splitter', parents=[get_args_parser()])
+args = parser.parse_args()
 
 # RANDOM SEED
 seed = 0
@@ -18,9 +23,9 @@ seed = 0
 n_fold = 3
 
 imgs = []
-imgs.extend(glob.glob(train_folder + '**/*.png', recursive=True))
-imgs.extend(glob.glob(train_folder + '**/*.jpg', recursive=True))
-imgs.extend(glob.glob(train_folder + '**/*.jpeg', recursive=True))
+imgs.extend(glob.glob(args.train_folder + '**/*.png', recursive=True))
+imgs.extend(glob.glob(args.train_folder + '**/*.jpg', recursive=True))
+imgs.extend(glob.glob(args.train_folder + '**/*.jpeg', recursive=True))
 
 random.seed(seed)
 random.shuffle(imgs)
@@ -39,7 +44,7 @@ for one_img in tqdm(labeled_imgs):
     else:
         raise NameError('Not a valid label.')
 
-    save_path = save_dir + 'labeled/' + label + '/'
+    save_path = args.save_dir + 'labeled/' + label + '/'
     os.makedirs(save_path, exist_ok=True)
 
     # SAVE IMAGE AFTER NORMALIZATION
@@ -66,7 +71,7 @@ for fold in range(n_fold):
         else:
             raise NameError('Not a valid label.')
 
-        save_path = save_dir + 'fold_{}/'.format(fold) + label + '/'
+        save_path = args.save_dir + 'fold_{}/'.format(fold) + label + '/'
         os.makedirs(save_path, exist_ok=True)
 
         # Normalize 후 Save
@@ -79,9 +84,9 @@ for fold in range(n_fold):
 
 # TEST DATA
 test_imgs = []
-test_imgs.extend(glob.glob(test_folder + '**/*.png', recursive=True))
-test_imgs.extend(glob.glob(test_folder + '**/*.jpg', recursive=True))
-test_imgs.extend(glob.glob(test_folder + '**/*.jpeg', recursive=True))
+test_imgs.extend(glob.glob(args.test_folder + '**/*.png', recursive=True))
+test_imgs.extend(glob.glob(args.test_folder + '**/*.jpg', recursive=True))
+test_imgs.extend(glob.glob(args.test_folder + '**/*.jpeg', recursive=True))
 
 for one_img in tqdm(test_imgs):
     if 'Normal' in one_img and not 'Tuberculosis' in one_img:
@@ -91,7 +96,7 @@ for one_img in tqdm(test_imgs):
     else:
         raise NameError('Not a valid label.')
 
-    save_path = save_dir + 'test/' + label + '/'
+    save_path = args.save_dir + 'test/' + label + '/'
     os.makedirs(save_path, exist_ok=True)
 
     # SAVE IMAGE AFTER NORMALIZATION

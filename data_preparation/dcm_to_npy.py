@@ -5,66 +5,45 @@ import os
 import glob
 from tqdm import tqdm
 import SimpleITK as sitk
+import argparse
 
-# CONFIG
-dir = 'PATH TO FOLDER CONTAINING .dcm FILES'
-save_dir = 'PATH TO SAVE PROCESSED FILES'
+def get_args_parser():
+    parser = argparse.ArgumentParser('dicom_to_npy', add_help=False)
+    parser.add_argument("--dir", default='PATH/TO/DCM/FILES', type=str, help='Path to your dcm files')
+    parser.add_argument("--save_dir", default='PATH/TO/SAVE/FILES', type=str, help='Path to your dcm files')
 
-# DATA type: NIH or others (preprocessing code varies depending on dataset sources)
-data = 'NIH'
+    return parser
 
-dcms = glob.glob(dir + '**/*.dcm', recursive=True)
+parser = argparse.ArgumentParser('dicom_to_npy', parents=[get_args_parser()])
+args = parser.parse_args()
+
+dcms = glob.glob(args.dir + '**/*.dcm', recursive=True)
 
 print('>>> Total of {} DCMs are detected.'.format(len(dcms)))
 
-if data == 'NIH':
-    for dcm in tqdm(dcms):
-        dicom = pydicom.dcmread(dcm)
-        img = dicom.pixel_array
-        monochrome = dicom.PhotometricInterpretation
+for dcm in tqdm(dcms):
+    dicom = pydicom.dcmread(dcm)
+    img = dicom.pixel_array
+    monochrome = dicom.PhotometricInterpretation
 
-        # TO PREVENT ERRORS IN NIH DATA
-        if monochrome == 'YBR_FULL_422':
-            continue
+    # TO PREVENT ERRORS IN NIH DATA
+    if monochrome == 'YBR_FULL_422':
+        continue
 
-        img = cv2.resize(img, dsize=(1024, 1024))
-        img = (img - img.min()) / (img.max() - img.min())
+    img = cv2.resize(img, dsize=(1024, 1024))
+    img = (img - img.min()) / (img.max() - img.min())
 
-        img = img * 255.
-        img = img.astype(np.uint8)
+    img = img * 255.
+    img = img.astype(np.uint8)
 
-        path = dcm.split('/')[-1].split('.dcm')[0]
-        path = path.replace('/', '_') + '____' + monochrome
-        save_path = save_dir + path + '.png'
+    path = dcm.split('/')[-1].split('.dcm')[0]
+    path = path.replace('/', '_') + '____' + monochrome
+    save_path = args.save_dir + path + '.png'
 
-        save_path_dir_list = save_path.split('/')[:-1]
-        str = ''
-        for name in save_path_dir_list:
-            str = str + name + '/'
+    save_path_dir_list = save_path.split('/')[:-1]
+    str = ''
+    for name in save_path_dir_list:
+        str = str + name + '/'
 
-        os.makedirs(str, exist_ok=True)
-        cv2.imwrite(save_path, img)
-
-else:
-    ds = sitk.ImageFileReader()
-
-    for dcm in tqdm(dcms):
-        ds.SetFileName(dcm)
-        img = sitk.GetArrayFromImage(sitk.ReadImage(dcm))[0]
-        img = np.asarray(img)
-
-        img = cv2.resize(img, dsize=(1024, 1024))
-        img = (img - img.min()) / (img.max() - img.min())
-
-        img = img * 255.
-        img = img.astype(np.uint8)
-
-        path = dcm.split('/')[-1].split('.dcm')[0]
-        save_path = save_dir + path + '.png'
-        save_path_dir_list = save_path.split('/')[:-1]
-        str = ''
-        for name in save_path_dir_list:
-            str = str + name + '/'
-
-        os.makedirs(str, exist_ok=True)
-        cv2.imwrite(save_path, img)
+    os.makedirs(str, exist_ok=True)
+    cv2.imwrite(save_path, img)

@@ -28,7 +28,16 @@
 * We tested on GeFore RTX 3090.
 * We recommend RAM of more than 32 GB.
 
+## Installation guide
+### Instruction
+* Install Pytorch and other dependencies. It can be easily installed with requirements.txt file.
+```
+>  pip install -r requirements.txt
+```
+
 ## Data preparation
+### Downloading data
+
 The open-source datasets used in paper can be obtained from following links.
 
 #### Normal and Tuberculosis CXRs
@@ -52,63 +61,84 @@ The open-source datasets used in paper can be obtained from following links.
 From these datasets, we only used normal, tuberculosis, pneumothorax and COVID-19 CXRs.
 
 Other parts of the institutional data (AMC, CNUH, YNU, KNUH) used in this study cannot be shared without the signed agreement as they may contain private information.
-However, we found that 
-
-```
-├── dataset
-   └── YOUR_DATASET_NAME
-       ├── trainA
-           ├── xxx.jpg (name, format doesn't matter)
-           ├── yyy.png
-           └── ...
-       ├── trainB
-           ├── zzz.jpg
-           ├── www.png
-           └── ...
-       ├── testA
-           ├── aaa.jpg 
-           ├── bbb.png
-           └── ...
-       └── testB
-           ├── ccc.jpg 
-           ├── ddd.png
-           └── ...
-```
-
-### Train
-```
-> python main.py --dataset selfie2anime
-```
-* If the memory of gpu is **not sufficient**, set `--light` to True
-
-### Test
-```
-> python main.py --dataset selfie2anime --phase test
-```
-
-## Architecture
-<div align="center">
-  <img src = './assets/generator.png' width = '785px' height = '500px'>
-</div>
-
----
+However, we found that similar results can be obtained when using an open-source repository for validation and the others for the model development. 
 
 <div align="center">
-  <img src = './assets/discriminator.png' width = '785px' height = '450px'>
+  <img src="./assets/results.png">
 </div>
 
-## Results
-### Ablation study
+For example, you can use Shenzen tuberculosis data containing 327 normal and 335 tuberculosis CXRs as test data as above.
+
+### Data preprocessing
+After downloading all data, dicom (.dcm) files should first be converted to image (.png) files.
+```
+>  python dcm_to_npy.py --dir PATH/TO/DCM/ --save_dir PATH/TO/SAVE/
+```
+Then, locate all training data to a folder and test data to another folder, and execute data splitter. It automatically split training data into small labeled subsets (10%) and 3 folded unlabeled subsets, and save test data in another folder.
+
+```
+>  python data_splitter.py --train_folder PATH/TO/TRAIN/ --test_folder PATH/TO/TEST/ --save_dir PATH/TO/SAVE/
+```
+
+After successful preprocessing, your data will be located as below.
+
+```
+├── save_dir
+      ├── labeled (containing about 10% of training data)
+          ├── xxx.png
+          └── ...
+      ├── fold_0 (unlabeled fold containing about 30% of training data)
+          ├── xxx.png
+          └── ...
+      ├── fold_1 (unlabeled fold containing about 30% of training data)
+          ├── xxx.png
+          └── ...
+      ├── fold_2 (unlabeled fold containing about 30% of training data)
+          ├── xxx.png
+          └── ...
+      ├── test (containing validation data)
+          ├── xxx.png
+          └── ...
+```
+
+## Training a model
+The pretrained Vision transformer (ViT-S8) weight is provided in *./pretrained_weights* folder.
+
+First, train the initial model with small initial labeled data.
+```
+> python pratrain_dino.py --name EXPERIMENT_NAME --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/LABELED
+```
+Then, iteratively improve the model with the proposed DISTL, increasing the size of unlabeled data.
+
+Note that the resulting weight after training of this iteration is used as the starting point at next iteration.
+```
+# Iteration 1
+> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/LABELED/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#1
+
+# Iteration 2
+> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/FOLD#1/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#2
+
+# Iteration 3
+> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/FOLD#2/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#3
+```
+## Evaluating a model
+You can evaluate the model performance (AUC) with the following code.
+```
+> python eval_finetune.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/TRAINED/WEIGHTS/checkpoint.pth --data_path /PATH/TO/DATA
+```
+
+## Visualizing attention
+The attentions of Vision transformer model can be visualized with following code.
+```
+> python visualize_attention.py --pretrained_weights /PATH/TO/TRAINED/WEIGHTS/checkpint.pth --image_dir /PATH/TO/IMAGES/
+```
+Successful visualization will provide attention maps as below.
+
 <div align="center">
-  <img src = './assets/ablation.png' width = '438px' height = '346px'>
+  <img src="./assets/attention.png">
 </div>
 
-### User study
-<div align="center">
-  <img src = './assets/user_study.png' width = '738px' height = '187px'>
-</div>
 
-### Comparison
-<div align="center">
-  <img src = './assets/kid.png' width = '787px' height = '344px'>
-</div>
+#### If you have any questions, please contact us via:
+depecher@kaist.ac.kr
+
