@@ -8,9 +8,9 @@ import argparse
 
 def get_args_parser():
     parser = argparse.ArgumentParser('data_splitter', add_help=False)
-    parser.add_argument("--train_folder", default='PATH/TO/TRAIN/DATA', type=str, help='Folder containing all train data')
-    parser.add_argument("--test_folder", default='PATH/TO/TEST/DATA', type=str, help='Folder containing all test data')
-    parser.add_argument("--save_dir", default='PATH/TO/SAVE/FILES', type=str, help='Path to your dcm files')
+    parser.add_argument("--train_folder", default='PATH/TO/TRAIN/', type=str, help='Folder containing all train data')
+    parser.add_argument("--test_folder", default='PATH/TO/TEST/', type=str, help='Folder containing all test data')
+    parser.add_argument("--save_dir", default='PATH/TO/SAVE/', type=str, help='Path to your dcm files')
 
     return parser
 

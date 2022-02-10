@@ -9,8 +9,8 @@ import argparse
 
 def get_args_parser():
     parser = argparse.ArgumentParser('dicom_to_npy', add_help=False)
-    parser.add_argument("--dir", default='PATH/TO/DCM/FILES', type=str, help='Path to your dcm files')
-    parser.add_argument("--save_dir", default='PATH/TO/SAVE/FILES', type=str, help='Path to your dcm files')
+    parser.add_argument("--dir", default='PATH/TO/DCM/', type=str, help='Path to your dcm files')
+    parser.add_argument("--save_dir", default='PATH/TO/SAVE/', type=str, help='Path to your dcm files')
 
     return parser
 
@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser('dicom_to_npy', parents=[get_args_parser()])
 args = parser.parse_args()
 
 dcms = glob.glob(args.dir + '**/*.dcm', recursive=True)
+dcms.extend(glob.glob(args.dir + '**/*.DCM', recursive=True))
 
 print('>>> Total of {} DCMs are detected.'.format(len(dcms)))
 

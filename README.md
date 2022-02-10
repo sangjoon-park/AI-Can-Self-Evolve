@@ -74,8 +74,9 @@ After downloading all data, dicom (.dcm) files should first be converted to imag
 ```
 >  python dcm_to_npy.py --dir PATH/DCM/ --save_dir PATH/SAVE/
 ```
-Then, locate all training data to a folder and test data to another folder, and execute data splitter. It automatically split training data into small labeled subsets (10%) and 3 folded unlabeled subsets, and save test data in another folder.
+Then, locate all normal data into a folder name containing *Normal* and all tuberculosis data into a folder name containing *Tuberculosis*.
 
+Next, locate all training data to a folder and test data to another folder, and execute data splitter. It automatically split training data into small labeled subsets (10%) and 3 folded unlabeled subsets, and save test data in another folder.
 ```
 >  python data_splitter.py --train_folder PATH/TRAIN/ --test_folder PATH/TEST/ --save_dir PATH/SAVE/
 ```
