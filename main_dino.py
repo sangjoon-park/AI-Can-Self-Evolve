@@ -112,10 +112,10 @@ def get_args_parser():
 
     # Misc
     # PATH TO DATA
-    parser.add_argument('--data_path', default='/COVID_4TB/open_3folds/', type=str,
+    parser.add_argument('--data_path', default='/PATH/DATA/', type=str,
         help='Please specify the directory to your data')
     # PATH TO SAVE MODEL WEIGHTS
-    parser.add_argument('--output_dir', default="/4TB_hdd/TB_checkpoint/20220209_Experiments/", type=str,
+    parser.add_argument('--output_dir', default="/PATH/SAVE/", type=str,
                         help='Path to save logs and checkpoints.')
     parser.add_argument('--saveckp_freq', default=20, type=int, help='Save checkpoint every x epochs.')
     parser.add_argument('--seed', default=0, type=int, help='Random seed.')
@@ -126,7 +126,7 @@ def get_args_parser():
 
     parser.add_argument('--total_folds', type=int, default=0,
                         help='Total folds to include')
-    parser.add_argument("--pretrained_dir", type=str, default=None,
+    parser.add_argument("--pretrained_dir", type=str, default='./pretrained_weights/pertrain.ckpt',
                         help="Where to search for pretrained ViT models on CheXpert features.")
     parser.add_argument("--checkpoint_key", default="student", type=str,
                         help='Key to use in the checkpoint (example: "student", "teacher")')

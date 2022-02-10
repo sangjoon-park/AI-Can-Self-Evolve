@@ -114,24 +114,24 @@ Then, iteratively improve the model with the proposed DISTL, increasing the size
 Note that the resulting weight after training of this iteration is used as the starting point at next iteration.
 ```
 # Iteration 1
-> python main_dino.py --name FOLD1 --pretrained_dir /PATH/SAVE/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD1/
+> python main_dino.py --name FOLD1 --pretrained_dir /PATH/SAVE/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD1/ --total_folds 1 --checkpoint_key each
 
 # Iteration 2
-> python main_dino.py --name FOLD2 --pretrained_dir /PATH/SAVE/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD2/
+> python main_dino.py --name FOLD2 --pretrained_dir /PATH/SAVE/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD2/ --total_folds 2 --checkpoint_key each
 
 # Iteration 3
-> python main_dino.py --name FOLD3 --pretrained_dir /PATH/SAVE/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD3/
+> python main_dino.py --name FOLD3 --pretrained_dir /PATH/SAVE/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD3/ --total_folds 3 --checkpoint_key each
 ```
 ## Evaluating a model
 You can evaluate the model performance (AUC) with the following code.
 ```
-> python eval_finetune.py --name EXP_NAME --pretrained_dir /PATH/SAVE/FOLD3/checkpoint.pth --data_path /PATH/DATA/
+> python eval_finetune.py --name EXP_NAME --pretrained_dir /PATH/SAVE/FOLD3/checkpoint.pth --data_path /PATH/DATA/ --checkpoint_key student
 ```
 
 ## Visualizing attention
 The attentions of Vision transformer model can be visualized with following code.
 ```
-> python visualize_attention.py --pretrained_weights /PATH/SAVE/FOLD3/checkpint.pth --image_dir /PATH/DATA/
+> python visualize_attention.py --pretrained_weights /PATH/SAVE/FOLD3/checkpint.pth --image_dir /PATH/DATA/ --checkpoint_key student
 ```
 Successful visualization will provide attention maps as below.
 
