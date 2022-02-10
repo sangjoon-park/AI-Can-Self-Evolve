@@ -107,31 +107,31 @@ The pretrained Vision transformer (ViT-S8) weight is provided in *./pretrained_w
 
 First, train the initial model with small initial labeled data.
 ```
-> python pratrain_dino.py --name LABELED --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/DATA/ --output_dir /PATH/SAVE/LABELED/
+> python pratrain_dino.py --name LABELED --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/DATA/ --output_dir /PATH/LABELED/
 ```
 Then, iteratively improve the model with the proposed DISTL, increasing the size of unlabeled data.
 
 Note that the resulting weight after training of this iteration is used as the starting point at next iteration.
 ```
 # Iteration 1
-> python main_dino.py --name FOLD1 --pretrained_dir /PATH/SAVE/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD1/ --total_folds 1 --checkpoint_key each
+> python main_dino.py --name FOLD1 --pretrained_dir /PATH/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD1/ --total_folds 1
 
 # Iteration 2
-> python main_dino.py --name FOLD2 --pretrained_dir /PATH/SAVE/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD2/ --total_folds 2 --checkpoint_key each
+> python main_dino.py --name FOLD2 --pretrained_dir /PATH/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD2/ --total_folds 2
 
 # Iteration 3
-> python main_dino.py --name FOLD3 --pretrained_dir /PATH/SAVE/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD3/ --total_folds 3 --checkpoint_key each
+> python main_dino.py --name FOLD3 --pretrained_dir /PATH/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD3/ --total_folds 3
 ```
 ## Evaluating a model
 You can evaluate the model performance (AUC) with the following code.
 ```
-> python eval_finetune.py --name EXP_NAME --pretrained_dir /PATH/SAVE/FOLD3/checkpoint.pth --data_path /PATH/DATA/ --checkpoint_key student
+> python eval_finetune.py --name EXP_NAME --pretrained_dir /PATH/FOLD3/checkpoint.pth --data_path /PATH/DATA/ --checkpoint_key student
 ```
 
 ## Visualizing attention
 The attentions of Vision transformer model can be visualized with following code.
 ```
-> python visualize_attention.py --pretrained_weights /PATH/SAVE/FOLD3/checkpint.pth --image_dir /PATH/DATA/ --checkpoint_key student
+> python visualize_attention.py --pretrained_weights /PATH/FOLD3/checkpint.pth --image_dir /PATH/DATA/ --checkpoint_key student
 ```
 Successful visualization will provide attention maps as below.
 

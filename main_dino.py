@@ -128,7 +128,7 @@ def get_args_parser():
                         help='Total folds to include')
     parser.add_argument("--pretrained_dir", type=str, default='./pretrained_weights/pertrain.ckpt',
                         help="Where to search for pretrained ViT models on CheXpert features.")
-    parser.add_argument("--checkpoint_key", default="student", type=str,
+    parser.add_argument("--checkpoint_key", default="each", type=str,
                         help='Key to use in the checkpoint (example: "student", "teacher")')
 
     parser.add_argument('--lam', type=float, default=0.5,
