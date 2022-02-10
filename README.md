@@ -72,12 +72,12 @@ For example, you can use Shenzen tuberculosis data containing 327 normal and 335
 ### Data preprocessing
 After downloading all data, dicom (.dcm) files should first be converted to image (.png) files.
 ```
->  python dcm_to_npy.py --dir PATH/TO/DCM/ --save_dir PATH/TO/SAVE/
+>  python dcm_to_npy.py --dir PATH/DCM/ --save_dir PATH/SAVE/
 ```
 Then, locate all training data to a folder and test data to another folder, and execute data splitter. It automatically split training data into small labeled subsets (10%) and 3 folded unlabeled subsets, and save test data in another folder.
 
 ```
->  python data_splitter.py --train_folder PATH/TO/TRAIN/ --test_folder PATH/TO/TEST/ --save_dir PATH/TO/SAVE/
+>  python data_splitter.py --train_folder PATH/TRAIN/ --test_folder PATH/TEST/ --save_dir PATH/SAVE/
 ```
 
 After successful preprocessing, your data will be located as below.
@@ -106,31 +106,31 @@ The pretrained Vision transformer (ViT-S8) weight is provided in *./pretrained_w
 
 First, train the initial model with small initial labeled data.
 ```
-> python pratrain_dino.py --name EXPERIMENT_NAME --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/LABELED
+> python pratrain_dino.py --name LABELED --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/DATA/ --output_dir /PATH/SAVE/LABELED/
 ```
 Then, iteratively improve the model with the proposed DISTL, increasing the size of unlabeled data.
 
 Note that the resulting weight after training of this iteration is used as the starting point at next iteration.
 ```
 # Iteration 1
-> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/LABELED/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#1
+> python main_dino.py --name FOLD1 --pretrained_dir /PATH/SAVE/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD1/
 
 # Iteration 2
-> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/FOLD#1/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#2
+> python main_dino.py --name FOLD2 --pretrained_dir /PATH/SAVE/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD2/
 
 # Iteration 3
-> python main_dino.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/SAVE/FOLD#2/checkpoint.pth --data_path /PATH/TO/DATA --output_dir /PATH/TO/SAVE/FOLD#3
+> python main_dino.py --name FOLD3 --pretrained_dir /PATH/SAVE/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/SAVE/FOLD3/
 ```
 ## Evaluating a model
 You can evaluate the model performance (AUC) with the following code.
 ```
-> python eval_finetune.py --name EXPERIMENT_NAME --pretrained_dir /PATH/TO/TRAINED/WEIGHTS/checkpoint.pth --data_path /PATH/TO/DATA
+> python eval_finetune.py --name EXP_NAME --pretrained_dir /PATH/SAVE/FOLD3/checkpoint.pth --data_path /PATH/DATA/
 ```
 
 ## Visualizing attention
 The attentions of Vision transformer model can be visualized with following code.
 ```
-> python visualize_attention.py --pretrained_weights /PATH/TO/TRAINED/WEIGHTS/checkpint.pth --image_dir /PATH/TO/IMAGES/
+> python visualize_attention.py --pretrained_weights /PATH/SAVE/FOLD3/checkpint.pth --image_dir /PATH/DATA/
 ```
 Successful visualization will provide attention maps as below.
 
