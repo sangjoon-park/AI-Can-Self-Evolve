@@ -156,6 +156,7 @@ def evaluate(args, model):
 
     # Load weights
     state_dict = torch.load(args.pretrained_dir, map_location="cpu")
+    args.checkpoint_key = 'student'
     print("Take key {} in provided checkpoint dict".format(args.checkpoint_key))
     state_dict = state_dict[args.checkpoint_key]
     # remove `module.` prefix
