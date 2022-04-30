@@ -2,7 +2,7 @@
 ### DISTL: Distillation for self-supervised and self-train learning
 
 <div align="center">
-  <img src="./assets/teaser.png">
+  <img src="./assets/teaser.PNG">
 </div>
 
 ### [Paper] | [Official Pytorch code](https://github.com/sangjoon-park/AI-Can-Self-Evolve)
@@ -102,25 +102,34 @@ After successful preprocessing, your data will be located as below.
             --- ...
 ```
 
+## Download pretrained weights
+You can download the pretrained weights on the CheXpert dataset in link below, which should be located as,
+
+https://drive.google.com/file/d/16y3eJRYQCg-B8rg9eB3XRA-6PcfHCNmA/view?usp=sharing
+
+```
+./pretrained_weights/pretrain.ckpt
+```
+
 ## Training a model
 The pretrained Vision transformer (ViT-S8) weight is provided in *./pretrained_weights* folder.
 
 First, train the initial model with small initial labeled data.
 ```
-> python pratrain_dino.py --name LABELED --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/DATA/ --output_dir /PATH/LABELED/
+> python pratrain.py --name LABELED --pretrained_dir ./pretrained_weights/pretrain.ckpt --data_path /PATH/DATA/ --output_dir /PATH/LABELED/
 ```
 Then, iteratively improve the model with the proposed DISTL, increasing the size of unlabeled data.
 
 Note that the resulting weight after training of this iteration is used as the starting point at next iteration.
 ```
 # Iteration 1
-> python main_dino.py --name FOLD1 --pretrained_dir /PATH/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD1/ --total_folds 1
+> python main_run.py --name FOLD1 --pretrained_dir /PATH/LABELED/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD1/ --total_folds 1
 
 # Iteration 2
-> python main_dino.py --name FOLD2 --pretrained_dir /PATH/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD2/ --total_folds 2
+> python main_run.py --name FOLD2 --pretrained_dir /PATH/FOLD1/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD2/ --total_folds 2
 
 # Iteration 3
-> python main_dino.py --name FOLD3 --pretrained_dir /PATH/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD3/ --total_folds 3
+> python main_run.py --name FOLD3 --pretrained_dir /PATH/FOLD2/checkpoint.pth --data_path /PATH/DATA/ --output_dir /PATH/FOLD3/ --total_folds 3
 ```
 ## Evaluating a model
 You can evaluate the model performance (AUC) with the following code.

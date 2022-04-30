@@ -7,9 +7,9 @@ import utils
 
 from torchvision import transforms as pth_transforms
 
-import main_dino
+import main_run
 
-parser = main_dino.get_args_parser()
+parser = main_run.get_args_parser()
 args = parser.parse_args()
 
 class CXR_Dataset(data.Dataset):

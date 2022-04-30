@@ -23,7 +23,7 @@ from vision_transformer import DINOHead, CLS_head
 
 import CXR_dataset
 
-import main_dino
+import main_run
 
 torchvision_archs = sorted(name for name in torchvision_models.__dict__
                            if name.islower() and not name.startswith("__")
@@ -397,7 +397,7 @@ class DataAugmentationDINO(object):
 
 
 if __name__ == '__main__':
-    parser = main_dino.get_args_parser()
+    parser = main_run.get_args_parser()
     args = parser.parse_args()
     args.option_dir = './'
     os.makedirs(args.option_dir, exist_ok=True)

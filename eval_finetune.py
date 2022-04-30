@@ -21,7 +21,7 @@ from vision_transformer import DINOHead, CLS_head
 from torchvision import models as torchvision_models
 
 import vision_transformer as vit_o
-from main_dino import get_args_parser
+from main_run import get_args_parser
 
 parser = argparse.ArgumentParser('DINO', parents=[get_args_parser()])
 args = parser.parse_args()
