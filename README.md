@@ -69,7 +69,7 @@ However, we found that similar results can be obtained when using an open-source
   <img src="./assets/results.png">
 </div>
 
-For example, you can use Shenzen tuberculosis data containing 327 normal and 335 tuberculosis CXRs as test data as above.
+For instance, you can use Shenzen tuberculosis data containing 327 normal and 335 tuberculosis CXRs as test data as above.
 
 ### Data preprocessing
 After downloading all data, dicom (.dcm) files should first be converted to image (.png) files.
