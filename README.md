@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/457379287.svg)](https://zenodo.org/badge/latestdoi/457379287)
+
 ## : Code for "AI can evolve without labels"
 ### DISTL: Distillation for self-supervised and self-train learning
 
