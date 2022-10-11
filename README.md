@@ -1,7 +1,8 @@
 [![DOI](https://zenodo.org/badge/457379287.svg)](https://zenodo.org/badge/latestdoi/457379287)
 
-## : Code for Nature Communications paper "Self-evolving vision transformer for chest X-ray diagnosis through knowledge distillation"
+## : Code for _Nature Communications_ paper "Self-evolving vision transformer for chest X-ray diagnosis through knowledge distillation"
 ### DISTL: Distillation for self-supervised and self-train learning
+### Paper link: [https://www.nature.com/articles/s41467-022-31514-x](https://www.nature.com/articles/s41467-022-31514-x)
 
 <div align="center">
   <img src="./assets/teaser.PNG">
